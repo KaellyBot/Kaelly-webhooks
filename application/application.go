@@ -10,14 +10,14 @@ import (
 	"github.com/spf13/viper"
 )
 
-func New() (*Application, error) {
+func New() (*Impl, error) {
 	// misc
 	db, err := databases.New()
 	if err != nil {
 		return nil, err
 	}
 
-	broker, err := amqp.New(constants.RabbitMQClientId, viper.GetString(constants.RabbitMqAddress), nil)
+	broker, err := amqp.New(constants.RabbitMQClientID, viper.GetString(constants.RabbitMQAddress), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -29,15 +29,15 @@ func New() (*Application, error) {
 	// services
 	// TODO
 
-	return &Application{broker: broker}, nil
+	return &Impl{broker: broker}, nil
 }
 
-func (app *Application) Run() error {
+func (app *Impl) Run() error {
 	// TODO
 	return nil
 }
 
-func (app *Application) Shutdown() {
+func (app *Impl) Shutdown() {
 	app.broker.Shutdown()
 	log.Info().Msgf("Application is no longer running")
 }
