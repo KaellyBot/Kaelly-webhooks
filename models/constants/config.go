@@ -20,8 +20,8 @@ const (
 	// RabbitMQ address.
 	RabbitMQAddress = "RABBITMQ_ADDRESS"
 
-	// Timeout to retrieve tweets in seconds.
-	TwitterTimeout = "HTTP_TIMEOUT"
+	// Discord Bot Token.
+	Token = "TOKEN"
 
 	// Metric port.
 	MetricPort = "METRIC_PORT"
@@ -32,11 +32,13 @@ const (
 	// Boolean; used to register commands at development guild level or globally.
 	Production = "PRODUCTION"
 
+	// Default values.
 	defaultMySQLURL        = "localhost:3306"
 	defaultMySQLUser       = ""
 	defaultMySQLPassword   = ""
 	defaultMySQLDatabase   = "kaellybot"
 	defaultRabbitMQAddress = "amqp://localhost:5672"
+	defaultToken           = ""
 	defaultMetricPort      = 2112
 	defaultLogLevel        = zerolog.InfoLevel
 	defaultProduction      = false
@@ -49,6 +51,7 @@ func GetDefaultConfigValues() map[string]any {
 		MySQLPassword:   defaultMySQLPassword,
 		MySQLDatabase:   defaultMySQLDatabase,
 		RabbitMQAddress: defaultRabbitMQAddress,
+		Token:           defaultToken,
 		MetricPort:      defaultMetricPort,
 		LogLevel:        defaultLogLevel.String(),
 		Production:      defaultProduction,

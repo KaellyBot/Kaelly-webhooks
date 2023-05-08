@@ -6,5 +6,8 @@ const (
 	LogFileName      = "fileName"
 	LogCorrelationID = "correlationID"
 	LogLanguage      = "language"
+	LogWebhookID     = "webhookID"
+	LogWebhookNumber = "webhookNumber"
+	LogPrintNumber   = "printNumber"
 	LogLevelFallback = zerolog.InfoLevel
 )
