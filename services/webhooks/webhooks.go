@@ -28,7 +28,7 @@ func New(broker amqp.MessageBroker, almanaxService almanax.Service,
 
 func GetBinding() amqp.Binding {
 	return amqp.Binding{
-		Exchange:   amqp.ExchangeRequest,
+		Exchange:   amqp.ExchangeNews,
 		RoutingKey: webhookRoutingkey,
 		Queue:      webhookQueueName,
 	}
@@ -59,6 +59,7 @@ func (service *Impl) consume(_ context.Context,
 func (service *Impl) applySuccessPolicy(webhookPolicy entities.WebhookPolicy) entities.WebhookPolicy {
 	if webhookPolicy.RetryNumber != 0 {
 		webhookPolicy.RetryNumber = 0
+		// TODO does not work
 	}
 	return webhookPolicy
 }

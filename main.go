@@ -82,6 +82,11 @@ func main() {
 		log.Fatal().Err(err).Msgf("Shutting down after failing to instantiate application")
 	}
 
+	err = app.Run()
+	if err != nil {
+		log.Fatal().Err(err).Msgf("Shutting down after failing to run application.")
+	}
+
 	sc := make(chan os.Signal, 1)
 	signal.Notify(sc, syscall.SIGINT, syscall.SIGTERM, os.Interrupt)
 	log.Info().Msgf("%s v%s is now running. Press CTRL-C to exit.", constants.InternalName, constants.Version)

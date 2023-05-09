@@ -1,12 +1,35 @@
 package mappers
 
 import (
+	"time"
+
 	"github.com/bwmarrin/discordgo"
 	amqp "github.com/kaellybot/kaelly-amqp"
+	"github.com/kaellybot/kaelly-webhooks/models/constants"
 )
 
 func MapFeed(feed *amqp.NewsRSSMessage) *discordgo.WebhookParams {
 	return &discordgo.WebhookParams{
-		// TODO
+		Embeds: []*discordgo.MessageEmbed{
+			{
+				Title: feed.Title,
+				Author: &discordgo.MessageEmbedAuthor{
+					Name: feed.AuthorName,
+				},
+				Color: constants.RSSColor,
+				URL:   feed.Url,
+				Image: &discordgo.MessageEmbedImage{
+					URL: feed.IconUrl,
+				},
+				Thumbnail: &discordgo.MessageEmbedThumbnail{
+					URL: constants.RSSIconURL,
+				},
+				Timestamp: feed.Date.AsTime().Format(time.RFC3339),
+				Footer: &discordgo.MessageEmbedFooter{
+					Text: feed.Type,
+					// TODO label from db
+				},
+			},
+		},
 	}
 }

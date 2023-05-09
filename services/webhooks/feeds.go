@@ -46,7 +46,7 @@ func (service *Impl) dispatchFeed(correlationID string, feed *amqp.NewsRSSMessag
 		Str(constants.LogCorrelationID, correlationID).
 		Int(constants.LogPrintNumber, printedNumber).
 		Int(constants.LogWebhookNumber, len(webhooks)).
-		Msgf("Tweet has been published!")
+		Msgf("Feed has been published!")
 
 	service.updateFeedWebhooks(updatedWebhooks)
 	service.deleteFeedWebhooks(excludedWebhooks)
