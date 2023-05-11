@@ -3,13 +3,11 @@ package application
 import (
 	amqp "github.com/kaellybot/kaelly-amqp"
 	"github.com/kaellybot/kaelly-webhooks/models/constants"
-	almanaxRepo "github.com/kaellybot/kaelly-webhooks/repositories/almanax"
 	feedsRepo "github.com/kaellybot/kaelly-webhooks/repositories/feeds"
-	twitterRepo "github.com/kaellybot/kaelly-webhooks/repositories/twitter"
-	"github.com/kaellybot/kaelly-webhooks/services/almanax"
+	webhooksRepo "github.com/kaellybot/kaelly-webhooks/repositories/webhooks"
 	"github.com/kaellybot/kaelly-webhooks/services/discord"
+	"github.com/kaellybot/kaelly-webhooks/services/dispatchers"
 	"github.com/kaellybot/kaelly-webhooks/services/feeds"
-	"github.com/kaellybot/kaelly-webhooks/services/twitter"
 	"github.com/kaellybot/kaelly-webhooks/services/webhooks"
 	"github.com/kaellybot/kaelly-webhooks/utils/databases"
 	"github.com/rs/zerolog/log"
@@ -24,37 +22,38 @@ func New() (*Impl, error) {
 	}
 
 	broker, err := amqp.New(constants.RabbitMQClientID, viper.GetString(constants.RabbitMQAddress),
-		[]amqp.Binding{webhooks.GetBinding()})
+		[]amqp.Binding{dispatchers.GetBinding()})
 	if err != nil {
 		return nil, err
 	}
 
 	// repositories
-	almanaxRepo := almanaxRepo.New(db)
+	webhooksRepo := webhooksRepo.New(db)
 	feedsRepo := feedsRepo.New(db)
-	twitterRepo := twitterRepo.New(db)
 
 	// services
-	almanaxService := almanax.New(almanaxRepo)
-	feedsService := feeds.New(feedsRepo)
-	twitterService := twitter.New(twitterRepo)
+	webhooksService := webhooks.New(webhooksRepo)
+	feedsService, err := feeds.New(feedsRepo)
+	if err != nil {
+		return nil, err
+	}
+
 	discordService, err := discord.New(viper.GetString(constants.Token))
 	if err != nil {
 		return nil, err
 	}
 
-	webhooksService := webhooks.New(broker, almanaxService, feedsService,
-		twitterService, discordService)
+	dispatchersService := dispatchers.New(broker, webhooksService, feedsService, discordService)
 
 	return &Impl{
-		broker:          broker,
-		webhooksService: webhooksService,
-		discordService:  discordService,
+		broker:             broker,
+		dispatchersService: dispatchersService,
+		discordService:     discordService,
 	}, nil
 }
 
 func (app *Impl) Run() error {
-	return app.webhooksService.Consume()
+	return app.dispatchersService.Consume()
 }
 
 func (app *Impl) Shutdown() {

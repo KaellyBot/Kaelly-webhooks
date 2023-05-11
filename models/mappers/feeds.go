@@ -6,9 +6,19 @@ import (
 	"github.com/bwmarrin/discordgo"
 	amqp "github.com/kaellybot/kaelly-amqp"
 	"github.com/kaellybot/kaelly-webhooks/models/constants"
+	"github.com/kaellybot/kaelly-webhooks/services/feeds"
 )
 
-func MapFeed(feed *amqp.NewsRSSMessage) *discordgo.WebhookParams {
+func MapFeed(feed *amqp.NewsRSSMessage, feedService feeds.Service, locale amqp.Language) *discordgo.WebhookParams {
+	feedLabel := feed.Type
+	feedType, found := feedService.FindFeedTypeByID(feed.Type)
+	if found {
+		label, labelFound := feedType.GetLabels()[locale]
+		if labelFound {
+			feedLabel = label
+		}
+	}
+
 	return &discordgo.WebhookParams{
 		Embeds: []*discordgo.MessageEmbed{
 			{
@@ -26,8 +36,7 @@ func MapFeed(feed *amqp.NewsRSSMessage) *discordgo.WebhookParams {
 				},
 				Timestamp: feed.Date.AsTime().Format(time.RFC3339),
 				Footer: &discordgo.MessageEmbedFooter{
-					Text: feed.Type,
-					// TODO label from db
+					Text: feedLabel,
 				},
 			},
 		},

@@ -3,10 +3,10 @@ package webhooks
 import (
 	amqp "github.com/kaellybot/kaelly-amqp"
 	"github.com/kaellybot/kaelly-webhooks/models/entities"
-	"github.com/kaellybot/kaelly-webhooks/repositories/webhooks"
+	"github.com/kaellybot/kaelly-webhooks/utils/databases"
 )
 
-type Service interface {
+type Repository interface {
 	GetAlmanaxWebhooks(locale amqp.Language) ([]entities.WebhookAlmanax, error)
 	GetFeedWebhooks(feedTypeID string, locale amqp.Language) ([]entities.WebhookFeed, error)
 	GetTwitterWebhooks(locale amqp.Language) ([]entities.WebhookTwitter, error)
@@ -19,5 +19,5 @@ type Service interface {
 }
 
 type Impl struct {
-	webhooksRepo webhooks.Repository
+	db databases.MySQLConnection
 }

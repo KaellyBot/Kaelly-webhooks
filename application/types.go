@@ -3,7 +3,7 @@ package application
 import (
 	amqp "github.com/kaellybot/kaelly-amqp"
 	"github.com/kaellybot/kaelly-webhooks/services/discord"
-	"github.com/kaellybot/kaelly-webhooks/services/webhooks"
+	"github.com/kaellybot/kaelly-webhooks/services/dispatchers"
 )
 
 type Application interface {
@@ -12,7 +12,7 @@ type Application interface {
 }
 
 type Impl struct {
-	broker          amqp.MessageBroker
-	webhooksService webhooks.Service
-	discordService  discord.Service
+	broker             amqp.MessageBroker
+	dispatchersService dispatchers.Service
+	discordService     discord.Service
 }

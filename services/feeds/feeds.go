@@ -1,23 +1,28 @@
 package feeds
 
 import (
-	amqp "github.com/kaellybot/kaelly-amqp"
 	"github.com/kaellybot/kaelly-webhooks/models/entities"
-	"github.com/kaellybot/kaelly-webhooks/repositories/feeds"
+	repository "github.com/kaellybot/kaelly-webhooks/repositories/feeds"
 )
 
-func New(feedsRepo feeds.Repository) *Impl {
-	return &Impl{feedsRepo: feedsRepo}
+func New(repository repository.Repository) (*Impl, error) {
+	feedTypeEntities, err := repository.GetFeedTypes()
+	if err != nil {
+		return nil, err
+	}
+
+	feedTypes := make(map[string]entities.FeedType)
+	for _, feedType := range feedTypeEntities {
+		feedTypes[feedType.ID] = feedType
+	}
+
+	return &Impl{
+		feedTypes:  feedTypes,
+		repository: repository,
+	}, nil
 }
 
-func (service *Impl) Get(feedTypeID string, locale amqp.Language) ([]entities.WebhookFeed, error) {
-	return service.feedsRepo.Get(feedTypeID, locale)
-}
-
-func (service *Impl) BatchUpdate(webhooks []entities.WebhookFeed) error {
-	return service.feedsRepo.BatchUpdate(webhooks)
-}
-
-func (service *Impl) BatchDelete(webhooks []entities.WebhookFeed) error {
-	return service.feedsRepo.BatchDelete(webhooks)
+func (service *Impl) FindFeedTypeByID(ID string) (entities.FeedType, bool) {
+	feedType, found := service.feedTypes[ID]
+	return feedType, found
 }

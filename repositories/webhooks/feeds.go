@@ -1,25 +1,21 @@
-package almanax
+package webhooks
 
 import (
 	"errors"
 
 	amqp "github.com/kaellybot/kaelly-amqp"
 	"github.com/kaellybot/kaelly-webhooks/models/entities"
-	"github.com/kaellybot/kaelly-webhooks/utils/databases"
 )
 
-func New(db databases.MySQLConnection) *Impl {
-	return &Impl{db: db}
-}
-
-func (repo *Impl) Get(locale amqp.Language) ([]entities.WebhookAlmanax, error) {
-	var webhooks []entities.WebhookAlmanax
+func (repo *Impl) GetFeedWebhooks(feedTypeID string, locale amqp.Language) ([]entities.WebhookFeed, error) {
+	var webhooks []entities.WebhookFeed
 	return webhooks, repo.db.GetDB().
-		Where("locale = ?", locale).
+		Where("feed_type_id = ? AND locale = ?",
+			feedTypeID, locale).
 		Find(&webhooks).Error
 }
 
-func (repo *Impl) BatchUpdate(webhooks []entities.WebhookAlmanax) error {
+func (repo *Impl) UpdateFeedWebhooks(webhooks []entities.WebhookFeed) error {
 	var err error
 	for _, webhook := range webhooks {
 		err = errors.Join(err, repo.db.GetDB().Model(&webhook).Updates(webhook).Error)
@@ -27,7 +23,7 @@ func (repo *Impl) BatchUpdate(webhooks []entities.WebhookAlmanax) error {
 	return err
 }
 
-func (repo *Impl) BatchDelete(webhooks []entities.WebhookAlmanax) error {
+func (repo *Impl) DeleteFeedWebhooks(webhooks []entities.WebhookFeed) error {
 	var err error
 	for _, webhook := range webhooks {
 		err = errors.Join(err, repo.db.GetDB().Model(&webhook).Delete(webhook).Error)
