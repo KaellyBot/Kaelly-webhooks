@@ -22,7 +22,7 @@ func New(repository repository.Repository) (*Impl, error) {
 	}, nil
 }
 
-func (service *Impl) FindFeedTypeByID(ID string) (entities.FeedType, bool) {
-	feedType, found := service.feedTypes[ID]
+func (service *Impl) FindFeedTypeByID(id string) (entities.FeedType, bool) {
+	feedType, found := service.feedTypes[id]
 	return feedType, found
 }

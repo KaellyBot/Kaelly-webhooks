@@ -16,7 +16,8 @@ func (repo *Impl) GetAlmanaxWebhooks(locale amqp.Language) ([]entities.WebhookAl
 
 func (repo *Impl) UpdateAlmanaxWebhooks(webhooks []entities.WebhookAlmanax) error {
 	var err error
-	for _, webhook := range webhooks {
+	for _, wh := range webhooks {
+		webhook := wh
 		err = errors.Join(err, repo.db.GetDB().Model(&webhook).Updates(webhook).Error)
 	}
 	return err
@@ -24,7 +25,8 @@ func (repo *Impl) UpdateAlmanaxWebhooks(webhooks []entities.WebhookAlmanax) erro
 
 func (repo *Impl) DeleteAlmanaxWebhooks(webhooks []entities.WebhookAlmanax) error {
 	var err error
-	for _, webhook := range webhooks {
+	for _, wh := range webhooks {
+		webhook := wh
 		err = errors.Join(err, repo.db.GetDB().Model(&webhook).Delete(webhook).Error)
 	}
 	return err

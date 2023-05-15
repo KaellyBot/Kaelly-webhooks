@@ -6,7 +6,7 @@ import (
 )
 
 type Service interface {
-	FindFeedTypeByID(ID string) (entities.FeedType, bool)
+	FindFeedTypeByID(id string) (entities.FeedType, bool)
 }
 
 type Impl struct {

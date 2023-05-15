@@ -17,7 +17,8 @@ func (repo *Impl) GetFeedWebhooks(feedTypeID string, locale amqp.Language) ([]en
 
 func (repo *Impl) UpdateFeedWebhooks(webhooks []entities.WebhookFeed) error {
 	var err error
-	for _, webhook := range webhooks {
+	for _, wh := range webhooks {
+		webhook := wh
 		err = errors.Join(err, repo.db.GetDB().Model(&webhook).Updates(webhook).Error)
 	}
 	return err
@@ -25,7 +26,8 @@ func (repo *Impl) UpdateFeedWebhooks(webhooks []entities.WebhookFeed) error {
 
 func (repo *Impl) DeleteFeedWebhooks(webhooks []entities.WebhookFeed) error {
 	var err error
-	for _, webhook := range webhooks {
+	for _, wh := range webhooks {
+		webhook := wh
 		err = errors.Join(err, repo.db.GetDB().Model(&webhook).Delete(webhook).Error)
 	}
 	return err

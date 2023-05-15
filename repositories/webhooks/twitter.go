@@ -16,7 +16,8 @@ func (repo *Impl) GetTwitterWebhooks(locale amqp.Language) ([]entities.WebhookTw
 
 func (repo *Impl) UpdateTwitterWebhooks(webhooks []entities.WebhookTwitter) error {
 	var err error
-	for _, webhook := range webhooks {
+	for _, wh := range webhooks {
+		webhook := wh
 		err = errors.Join(err, repo.db.GetDB().Model(&webhook).Updates(webhook).Error)
 	}
 	return err
@@ -24,7 +25,8 @@ func (repo *Impl) UpdateTwitterWebhooks(webhooks []entities.WebhookTwitter) erro
 
 func (repo *Impl) DeleteTwitterWebhooks(webhooks []entities.WebhookTwitter) error {
 	var err error
-	for _, webhook := range webhooks {
+	for _, wh := range webhooks {
+		webhook := wh
 		err = errors.Join(err, repo.db.GetDB().Model(&webhook).Delete(webhook).Error)
 	}
 	return err
