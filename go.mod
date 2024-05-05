@@ -5,6 +5,7 @@ go 1.22
 // replace github.com/kaellybot/kaelly-amqp => /home/kaysoro/git/kaelly-amqp
 
 require (
+	github.com/bwmarrin/discordgo v0.28.1
 	github.com/kaellybot/kaelly-amqp v0.0.3-beta5
 	github.com/prometheus/client_golang v1.15.0
 	github.com/rs/zerolog v1.28.0
@@ -15,7 +16,6 @@ require (
 
 require (
 	github.com/beorn7/perks v1.0.1 // indirect
-	github.com/bwmarrin/discordgo v0.27.1
 	github.com/cespare/xxhash/v2 v2.2.0 // indirect
 	github.com/fsnotify/fsnotify v1.6.0 // indirect
 	github.com/go-sql-driver/mysql v1.7.0 // indirect
